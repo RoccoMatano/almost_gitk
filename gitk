@@ -2508,10 +2508,10 @@ proc makewindow {} {
     trace add variable sha1string write sha1change
     pack $sha1entry -side left -pady 2
 
-    ttk::button .tf.bar.leftbut -command goback -state disabled 
+    ttk::button .tf.bar.leftbut -command goback -state disabled
     .tf.bar.leftbut configure -text \u2190 -width 3
     pack .tf.bar.leftbut -side left -fill y
-    ttk::button .tf.bar.rightbut -command goforw -state disabled 
+    ttk::button .tf.bar.rightbut -command goforw -state disabled
     .tf.bar.rightbut configure -text \u2192 -width 3
     pack .tf.bar.rightbut -side left -fill y
 
@@ -2892,7 +2892,7 @@ proc makewindow {} {
         {mc "Highlight this too" command {flist_hl 0}}
         {mc "Highlight this only" command {flist_hl 1}}
         {mc "External diff" command {external_diff}}
-        {mc "Blame parent commit" command {external_blame 1}}
+        {mc "Show in TC" command {show_in_tc}}
         {mc "Copy path" command {clipboard clear; clipboard append $flist_menu_file}}
     }
     $flist_menu configure -tearoff 0
@@ -2904,6 +2904,21 @@ proc makewindow {} {
         {mc "Run git gui blame on this line" command {external_blame_diff}}
     }
     $diff_menu configure -tearoff 0
+}
+
+proc show_in_tc {} {
+    global worktree
+    global flist_menu_file
+
+    set path_fs [file join $worktree $flist_menu_file]
+    set path_bs [string map {"/" "\\"} $path_fs]
+    set path_param [format {/L=%s} $path_bs]
+    set tc $::env(COMMANDER_EXE)
+    set cmd [list $tc "/O" "/S" $path_param]
+
+    if {[catch {exec {*}$cmd} err]} {
+        error_popup "r-rohr: $err"
+    }
 }
 
 # Update row number label when selectedline changes
@@ -10014,7 +10029,7 @@ proc resethead {} {
         [mc "Reset branch %s to %s?" $mainhead [string range $rowmenuid 0 7]]
     pack $w.m -side top -fill x -padx 20 -pady 20
     ttk::labelframe $w.f -text [mc "Reset type:"]
-    set resettype mixed
+    set resettype hard
     ttk::radiobutton $w.f.soft -value soft -variable resettype \
         -text [mc "Soft: Leave working tree and index untouched"]
     grid $w.f.soft -sticky w
