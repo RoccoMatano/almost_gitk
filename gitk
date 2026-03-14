@@ -10254,6 +10254,7 @@ proc showrefs {} {
     ttk::frame $top.f
     ttk::label $top.f.l -text "[mc "Filter"]: "
     ttk::entry $top.f.e -width 20 -textvariable reflistfilter
+    focus $top.f.e
     set reflistfilter "*"
     trace add variable reflistfilter write reflistfilter_change
     pack $top.f.e -side right -fill x -expand 1
