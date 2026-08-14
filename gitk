@@ -9645,8 +9645,7 @@ proc copyreference {} {
     global rowmenuid autosellen
     global hashlength
 
-    set format "%h (\"%s\", %ad)"
-    set cmd [list git show -s --pretty=format:$format --date=short]
+    set cmd [list git show -s --pretty=format:%s]
     if {$autosellen < $hashlength} {
         lappend cmd --abbrev=$autosellen
     }
