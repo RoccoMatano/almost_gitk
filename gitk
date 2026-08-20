@@ -10437,12 +10437,7 @@ proc getallcommits {} {
         set seeds {}
         set allcwait 0
         set cachedarcs 0
-        set allccache [file join $gitdir "gitk.cache"]
-        if {![catch {
-            set f [safe_open_file $allccache r]
-            set allcwait 1
-            getcache $f
-        }]} return
+        set allccache {}
     }
 
     if {$allcwait} {
@@ -10864,16 +10859,7 @@ proc writecache {f} {
 }
 
 proc savecache {} {
-    global nextarc cachedarcs cachearc allccache
-
-    if {$nextarc == $cachedarcs} return
-    set cachearc 0
-    set cachedarcs $nextarc
-    catch {
-        set f [safe_open_file $allccache w]
-        puts $f [list 1 $cachedarcs]
-        run writecache $f
-    }
+    return
 }
 
 # Returns 1 if a is an ancestor of b, -1 if b is an ancestor of a,
